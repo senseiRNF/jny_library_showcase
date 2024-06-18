@@ -1077,7 +1077,50 @@ class ShowcaseViewPage extends StatelessWidget {
           fit: BoxFit.cover,
         ) :
         controller.currentState == "INFORMATION" ?
-        const Material() :
+        Image.asset(
+          "assets/images/information.png",
+          fit: BoxFit.cover,
+        ) :
+        controller.currentState == "INFO_1" ?
+        Image.asset(
+          "assets/images/library_info_1.jpeg",
+          fit: BoxFit.cover,
+        ) :
+        controller.currentState == "INFO_2" ?
+        Image.asset(
+          "assets/images/library_info_2.png",
+          fit: BoxFit.cover,
+        ) :
+        controller.currentState == "INFO_3" ?
+        Image.asset(
+          "assets/images/library_info_3.png",
+          fit: BoxFit.cover,
+        ) :
+        controller.currentState == "INFO_4" ?
+        Image.asset(
+          "assets/images/library_info_4.png",
+          fit: BoxFit.cover,
+        ) :
+        controller.currentState == "INFO_5" ?
+        Image.asset(
+          "assets/images/library_info_5.png",
+          fit: BoxFit.cover,
+        ) :
+        controller.currentState == "INFO_6" ?
+        Image.asset(
+          "assets/images/library_info_6.png",
+          fit: BoxFit.cover,
+        ) :
+        controller.currentState == "INFO_7" ?
+        Image.asset(
+          "assets/images/library_info_7.png",
+          fit: BoxFit.cover,
+        ) :
+        controller.currentState == "INFO_8" ?
+        Image.asset(
+          "assets/images/library_info_8.png",
+          fit: BoxFit.cover,
+        ) :
         const Material() :
         const Material(),
       ),
