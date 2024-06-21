@@ -23,20 +23,22 @@ class ShowcaseViewPage extends StatelessWidget {
         controller.currentState == "IDLE" ?
         CarouselSlider(
           options: CarouselOptions(
-            viewportFraction: 1,
+            height: MediaQuery.of(context).size.height,
+            viewportFraction: 1.0,
             autoPlay: true,
             autoPlayInterval: const Duration(seconds: 10),
             autoPlayAnimationDuration: const Duration(seconds: 2),
             autoPlayCurve: Curves.easeInOut,
             enlargeCenterPage: true,
+            scrollPhysics: const NeverScrollableScrollPhysics(),
           ),
           items: [
             Image.asset(
-              "assets/images/screensaver_1_landscape.png",
+              "assets/images/ss_1_ls.png",
               fit: BoxFit.cover,
             ),
             Image.asset(
-              "assets/images/screensaver_2_landscape.png",
+              "assets/images/ss_2_ls.png",
               fit: BoxFit.cover,
             ),
             Image.asset(
@@ -628,7 +630,7 @@ class ShowcaseViewPage extends StatelessWidget {
                                             width: 10.0,
                                           ),
                                           Text(
-                                            'Number Of Books Borrowed: ${controller.borrowHistoryList[index].items != null ? controller.borrowHistoryList[index].items!.length : "Unknown"}',
+                                            'Number Of Books Borrowed: ${controller.borrowHistoryList[index].books != null ? controller.borrowHistoryList[index].books!.length : "Unknown"}',
                                           ),
                                         ],
                                       ),
@@ -770,6 +772,16 @@ class ShowcaseViewPage extends StatelessWidget {
                                 const SizedBox(
                                   width: 10.0,
                                 ),
+                                SizedBox(
+                                  width: MediaQuery.of(context).size.width / 24,
+                                  child: CachedNetworkImage(
+                                    imageUrl: returnedBook.url ?? '',
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 10.0,
+                                ),
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -777,7 +789,7 @@ class ShowcaseViewPage extends StatelessWidget {
                                       Text(
                                         returnedBook.bibliography!.title ?? 'Unknown',
                                         style: const TextStyle(
-                                          fontSize: 18.0,
+                                          fontSize: 14.0,
                                           fontWeight: FontWeight.w700,
                                         ),
                                       ),
@@ -787,8 +799,56 @@ class ShowcaseViewPage extends StatelessWidget {
                                       Text(
                                         "ISBN/ISSN: ${returnedBook.bibliography!.isbnOrIssn ?? 'Unknown'}",
                                         style: const TextStyle(
-                                          fontSize: 14.0,
+                                          fontSize: 10.0,
                                         ),
+                                      ),
+                                      const SizedBox(
+                                        height: 10.0,
+                                      ),
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const Text(
+                                            'Authors: ',
+                                            style: TextStyle(
+                                              fontSize: 10.0,
+                                            ),
+                                          ),
+                                          Text(
+                                            returnedBook.bibliography != null ?
+                                            returnedBook.bibliography!.authorNames ?? 'Unknown' :
+                                            'Unknown',
+                                            style: const TextStyle(
+                                              fontSize: 10.0,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              'Publisher: ${returnedBook.bibliography != null
+                                                  && returnedBook.bibliography!.publisher != null ?
+                                              returnedBook.bibliography!.publisher!.name ?? 'Unknown' :
+                                              "Unknown"} ',
+                                              style: const TextStyle(
+                                                fontSize: 10.0,
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                              'Publishing Year: ${returnedBook.bibliography != null ?
+                                              returnedBook.bibliography!.publishingYear ?? 'Unknown' :
+                                              "Unknown"} ',
+                                              style: const TextStyle(
+                                                fontSize: 10.0,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
@@ -939,6 +999,16 @@ class ShowcaseViewPage extends StatelessWidget {
                                 const SizedBox(
                                   width: 10.0,
                                 ),
+                                SizedBox(
+                                  width: MediaQuery.of(context).size.width / 24,
+                                  child: CachedNetworkImage(
+                                    imageUrl: controller.borrowedBookList[index].url ?? '',
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 10.0,
+                                ),
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -946,7 +1016,7 @@ class ShowcaseViewPage extends StatelessWidget {
                                       Text(
                                         controller.borrowedBookList[index].bibliography!.title ?? 'Unknown',
                                         style: const TextStyle(
-                                          fontSize: 18.0,
+                                          fontSize: 14.0,
                                           fontWeight: FontWeight.w700,
                                         ),
                                       ),
@@ -956,8 +1026,56 @@ class ShowcaseViewPage extends StatelessWidget {
                                       Text(
                                         "ISBN/ISSN: ${controller.borrowedBookList[index].bibliography!.isbnOrIssn ?? 'Unknown'}",
                                         style: const TextStyle(
-                                          fontSize: 14.0,
+                                          fontSize: 10.0,
                                         ),
+                                      ),
+                                      const SizedBox(
+                                        height: 10.0,
+                                      ),
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const Text(
+                                            'Authors: ',
+                                            style: TextStyle(
+                                              fontSize: 10.0,
+                                            ),
+                                          ),
+                                          Text(
+                                            controller.borrowedBookList[index].bibliography != null ?
+                                            controller.borrowedBookList[index].bibliography!.authorNames ?? 'Unknown' :
+                                            'Unknown',
+                                            style: const TextStyle(
+                                              fontSize: 10.0,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              'Publisher: ${controller.borrowedBookList[index].bibliography != null
+                                                  && controller.borrowedBookList[index].bibliography!.publisher != null ?
+                                              controller.borrowedBookList[index].bibliography!.publisher!.name ?? 'Unknown' :
+                                              "Unknown"} ',
+                                              style: const TextStyle(
+                                                fontSize: 10.0,
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                              'Publishing Year: ${controller.borrowedBookList[index].bibliography != null ?
+                                              controller.borrowedBookList[index].bibliography!.publishingYear ?? 'Unknown' :
+                                              "Unknown"} ',
+                                              style: const TextStyle(
+                                                fontSize: 10.0,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
@@ -991,89 +1109,316 @@ class ShowcaseViewPage extends StatelessWidget {
           ],
         ) :
         controller.currentState == "SHOW_BOOK_DETAIL" && controller.bookData != null ?
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              width: MediaQuery.of(context).size.width / 6,
-              child: CachedNetworkImage(
-                imageUrl: controller.bookData!.mediaPath ?? '',
-                fit: BoxFit.contain,
+            controller.bookData!.mediaPath != null ?
+            Expanded(
+              flex: 2,
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                      child: SizedBox(
+                        child: CachedNetworkImage(
+                          imageUrl: controller.bookData!.mediaPath ?? '',
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height / 16,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  controller.bookData!.title ?? 'Unknown',
-                  style: const TextStyle(
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.w700,
-                  ),
-                  textAlign: TextAlign.center,
+            ) :
+            const Material(),
+            Expanded(
+              flex: 3,
+              child: Container(
+                color: Theme.of(context).colorScheme.primary,
+                padding: const EdgeInsets.only(left: 50),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const Text(
+                      "INFORMATION",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 44.0,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 50.0,
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              const Text(
+                                "Type",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 10.0,
+                              ),
+                              Text(
+                                controller.bookData!.type ?? "-",
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 30.0,
+                        ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              const Text(
+                                "Location",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 10.0,
+                              ),
+                              Text(
+                                controller.bookData!.location ?? "-",
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              const Text(
+                                "Title",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 10.0,
+                              ),
+                              Text(
+                                controller.bookData!.title ?? "-",
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 30.0,
+                        ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              const Text(
+                                "Shelf Location",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 10.0,
+                              ),
+                              Text(
+                                controller.bookData!.shelfLocation ?? "-",
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              const Text(
+                                "ISBN/ISSN",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 10.0,
+                              ),
+                              Text(
+                                controller.bookData!.isbnOrIssn ?? "-",
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Expanded(
+                          child: Material(),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              const Text(
+                                "Authors",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 10.0,
+                              ),
+                              Text(
+                                controller.bookData!.authorNames ?? "-",
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Expanded(
+                          child: Material(),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              const Text(
+                                "Publisher",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 10.0,
+                              ),
+                              Text(
+                                controller.bookData!.publisher ?? "-",
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Expanded(
+                          child: Material(),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              const Text(
+                                "Publishing Year",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 10.0,
+                              ),
+                              Text(
+                                controller.bookData!.publishingYear ?? "-",
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Expanded(
+                          child: Material(),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                const SizedBox(
-                  height: 10.0,
-                ),
-                Text(
-                  "ISBN/ISSN: ${controller.bookData!.isbnOrIssn ?? 'Unknown'}",
-                  style: const TextStyle(
-                    fontSize: 20.0,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                Text(
-                  'Author(s): ${controller.bookData!.authorNames ?? 'Unknown'}',
-                  style: const TextStyle(
-                    fontSize: 20.0,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                Text(
-                  'Publisher: ${controller.bookData!.publisher ?? 'Unknown'} ',
-                  style: const TextStyle(
-                    fontSize: 20.0,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                Text(
-                  'Publishing Year: ${controller.bookData!.publishingYear ?? 'Unknown'}',
-                  style: const TextStyle(
-                    fontSize: 20.0,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(
-                  height: 10.0,
-                ),
-                Text(
-                  'Location: ${controller.bookData!.location ?? 'Unknown'}',
-                  style: const TextStyle(
-                    fontSize: 20.0,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
+              ),
             ),
           ],
         ) :
         controller.currentState == "BORROW" ?
         Image.asset(
-          "assets/images/thank_you_borrow_landscape.png",
+          "assets/images/borrow_ls.png",
           fit: BoxFit.cover,
         ) :
         controller.currentState == "RENEW" ?
         Image.asset(
-          "assets/images/thank_you_renew_landscape.png",
+          "assets/images/renew_ls.png",
           fit: BoxFit.cover,
         ) :
         controller.currentState == "RETURN" ?
         Image.asset(
-            "assets/images/thank_you_return_landscape.png",
+            "assets/images/return_ls.png",
           fit: BoxFit.cover,
         ) :
         controller.currentState == "INFORMATION" ?

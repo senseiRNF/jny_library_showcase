@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jny_library_showcase/services/local/functions/shared_prefs_functions.dart';
 import 'package:jny_library_showcase/services/local/jsons/book_json.dart';
-import 'package:jny_library_showcase/services/local/jsons/borrow_history_json.dart';
 import 'package:jny_library_showcase/services/local/jsons/borrowed_books_json.dart';
 import 'package:jny_library_showcase/services/local/jsons/library_member_json.dart';
 import 'package:jny_library_showcase/services/network/pocket_base_config.dart';
@@ -25,11 +24,10 @@ class ShowcasePageController extends State<ShowcasePage> {
   List<BookDataJson> bookDataList = [];
 
   List<BorrowedDetailDataJson> borrowedDetailList = [];
+  List<BorrowedDetailDataJson> borrowHistoryList = [];
   List<BorrowedBooksDataJson> borrowedBookList = [];
 
   List<Map<bool, BorrowedBooksDataJson>> returnedBookList = [];
-
-  List<BorrowHistoryDataJson> borrowHistoryList = [];
 
   BookDataJson? bookData;
 
@@ -65,7 +63,7 @@ class ShowcasePageController extends State<ShowcasePage> {
 
       List<Map<bool, BorrowedBooksDataJson>> tempReturnedBookList = [];
 
-      List<BorrowHistoryDataJson> tempBorrowHistoryList = [];
+      List<BorrowedDetailDataJson> tempBorrowHistoryList = [];
 
       BookDataJson? tempBookData;
 
@@ -94,7 +92,7 @@ class ShowcasePageController extends State<ShowcasePage> {
           if(e.record!.data['state'] == "SHOW_BORROWED") {
             if(e.record!.data['args']['history'] != null) {
               for(int i  = 0; i < e.record!.data['args']['history'].length; i++) {
-                tempBorrowHistoryList.add(BorrowHistoryDataJson.fromJson(e.record!.data['args']['history'][i]));
+                tempBorrowHistoryList.add(BorrowedDetailDataJson.fromJson(e.record!.data['args']['history'][i]));
               }
             }
           }
