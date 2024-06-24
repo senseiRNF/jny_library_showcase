@@ -82,6 +82,16 @@ class ShowcaseViewPage extends StatelessWidget {
                               imageUrl: controller.libraryMemberData.photoUrl ?? '',
                               width: MediaQuery.of(context).size.width / 6,
                               fit: BoxFit.contain,
+                              errorWidget: (errContext, _, errObj) {
+                                return SizedBox(
+                                  width: MediaQuery.of(context).size.width / 6,
+                                  child: const Icon(
+                                    Icons.person,
+                                    size: 200.0,
+                                    color: Colors.white,
+                                  ),
+                                );
+                              },
                             ),
                           ),
                           const SizedBox(
@@ -163,11 +173,11 @@ class ShowcaseViewPage extends StatelessWidget {
                           child: Padding(
                             padding: const EdgeInsets.all(10.0),
                             child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Container(
-                                  width: 20.0,
-                                  height: 20.0,
+                                  width: 30.0,
+                                  height: 30.0,
                                   decoration: BoxDecoration(
                                     color: Theme.of(context).colorScheme.primary,
                                     shape: BoxShape.circle,
@@ -189,6 +199,16 @@ class ShowcaseViewPage extends StatelessWidget {
                                   child: CachedNetworkImage(
                                     imageUrl: controller.bookDataList[index].mediaPath ?? '',
                                     fit: BoxFit.contain,
+                                    errorWidget: (errContext, _, errObj) {
+                                      return SizedBox(
+                                        width: MediaQuery.of(context).size.width / 24,
+                                        child: Icon(
+                                          Icons.book,
+                                          size: 40.0,
+                                          color: Theme.of(context).colorScheme.primary,
+                                        ),
+                                      );
+                                    },
                                   ),
                                 ),
                                 const SizedBox(
@@ -314,6 +334,16 @@ class ShowcaseViewPage extends StatelessWidget {
                         imageUrl: controller.libraryMemberData.photoUrl ?? '',
                         width: MediaQuery.of(context).size.width / 6,
                         fit: BoxFit.contain,
+                        errorWidget: (errContext, _, errObj) {
+                          return SizedBox(
+                            width: MediaQuery.of(context).size.width / 6,
+                            child: const Icon(
+                              Icons.person,
+                              size: 200.0,
+                              color: Colors.white,
+                            ),
+                          );
+                        },
                       ),
                     ),
                     const SizedBox(
@@ -357,9 +387,7 @@ class ShowcaseViewPage extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10.0),
                     child: Text(
-                      controller.currentState == "SHOW_RETURN" ? "RETURN" :
-                      controller.currentState == "SHOW_RENEW" ? "RENEW" :
-                      "ACCOUNT INFORMATION",
+                      controller.currentState == "SHOW_RETURN" ? "RETURN" : "RENEW",
                       style: const TextStyle(
                         fontSize: 22.0,
                         fontWeight: FontWeight.w700,
@@ -396,7 +424,11 @@ class ShowcaseViewPage extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      'Status: ${controller.borrowedDetailList[index].status ?? "Unknown"}',
+                                      controller.borrowedDetailList[index].status ?? "-",
+                                      style: TextStyle(
+                                        color: Theme.of(context).colorScheme.primary,
+                                        fontWeight: FontWeight.w700,
+                                      ),
                                     ),
                                     const SizedBox(
                                       width: 10.0,
@@ -455,6 +487,16 @@ class ShowcaseViewPage extends StatelessWidget {
                         imageUrl: controller.libraryMemberData.photoUrl ?? '',
                         width: MediaQuery.of(context).size.width / 6,
                         fit: BoxFit.contain,
+                        errorWidget: (errContext, _, errObj) {
+                          return SizedBox(
+                            width: MediaQuery.of(context).size.width / 6,
+                            child: const Icon(
+                              Icons.person,
+                              size: 200.0,
+                              color: Colors.white,
+                            ),
+                          );
+                        },
                       ),
                     ),
                     const SizedBox(
@@ -496,163 +538,188 @@ class ShowcaseViewPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10.0),
                     child: Text(
-                      controller.currentState == "SHOW_RETURN" ? "RETURN" :
-                      controller.currentState == "SHOW_RENEW" ? "RENEW" :
                       "ACCOUNT INFORMATION",
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 22.0,
                         fontWeight: FontWeight.w700,
                       ),
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: Text(
-                      "BOOKS CURRENTLY BEING BORROWED",
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                  controller.borrowedDetailList.isNotEmpty ?
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: controller.borrowedDetailList.length,
-                    itemBuilder: (BuildContext listContext, int index) {
-                      return Card(
-                        elevation: 10.0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              Text(
-                                'Borrow Date: ${controller.borrowedDetailList[index].fromDate != null ? DateFormat('EEEE, dd MMMM yyyy').format(DateTime.parse(controller.borrowedDetailList[index].fromDate!)) : "Unknown"}',
-                              ),
-                              Text(
-                                'Return Date: ${controller.borrowedDetailList[index].untilDate != null ? DateFormat('EEEE, dd MMMM yyyy').format(DateTime.parse(controller.borrowedDetailList[index].untilDate!)) : "Unknown"}',
-                              ),
-                              const SizedBox(
-                                height: 10.0,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    'Status: ${controller.borrowedDetailList[index].status ?? "Unknown"}',
+                              const Padding(
+                                padding: EdgeInsets.all(10.0),
+                                child: Text(
+                                  "BOOKS CURRENTLY BEING BORROWED",
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.w700,
                                   ),
-                                  const SizedBox(
-                                    width: 10.0,
-                                  ),
-                                  Text(
-                                    'Number Of Books Borrowed: ${controller.borrowedDetailList[index].books != null ? controller.borrowedDetailList[index].books!.length : "Unknown"}',
-                                  ),
-                                ],
+                                ),
+                              ),
+                              controller.borrowedDetailList.isNotEmpty ?
+                              Expanded(
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: controller.borrowedDetailList.length < 5 ?
+                                  controller.borrowedDetailList.length : 5,
+                                  itemBuilder: (BuildContext listContext, int index) {
+                                    return Card(
+                                      elevation: 10.0,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(5.0),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                                          children: [
+                                            Text(
+                                              'Borrow Date: ${controller.borrowedDetailList[index].fromDate != null ? DateFormat('EEEE, dd MMMM yyyy').format(DateTime.parse(controller.borrowedDetailList[index].fromDate!)) : "Unknown"}',
+                                            ),
+                                            Text(
+                                              'Return Date: ${controller.borrowedDetailList[index].untilDate != null ? DateFormat('EEEE, dd MMMM yyyy').format(DateTime.parse(controller.borrowedDetailList[index].untilDate!)) : "Unknown"}',
+                                            ),
+                                            const SizedBox(
+                                              height: 10.0,
+                                            ),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text(
+                                                  controller.borrowedDetailList[index].status ?? "-",
+                                                  style: TextStyle(
+                                                    color: Theme.of(context).colorScheme.primary,
+                                                    fontWeight: FontWeight.w700,
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  width: 10.0,
+                                                ),
+                                                Text(
+                                                  'Number Of Books Borrowed: ${controller.borrowedDetailList[index].books != null ? controller.borrowedDetailList[index].books!.length : "Unknown"}',
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ) :
+                              const Expanded(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  children: [
+                                    Text(
+                                      'Currently, no books are being borrowed',
+                                      style: TextStyle(
+                                        fontSize: 18.0,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    )
+                                  ],
+                                ),
                               ),
                             ],
                           ),
                         ),
-                      );
-                    },
-                  ) :
-                  const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        'Currently, no books are being borrowed',
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.w700,
-                        ),
-                        textAlign: TextAlign.center,
-                      )
-                    ],
-                  ),
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.all(10.0),
-                          child: Text(
-                            "BORROW HISTORY",
-                            style: TextStyle(
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ),
-                        controller.borrowHistoryList.isNotEmpty ?
                         Expanded(
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: controller.borrowHistoryList.length,
-                            itemBuilder: (BuildContext listContext, int index) {
-                              return Card(
-                                elevation: 10.0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5.0),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                                    children: [
-                                      Text(
-                                        'Borrow Date: ${controller.borrowHistoryList[index].fromDate != null ? DateFormat('EEEE, dd MMMM yyyy').format(DateTime.parse(controller.borrowHistoryList[index].fromDate!)) : "Unknown"}',
-                                      ),
-                                      Text(
-                                        'Return Date: ${controller.borrowHistoryList[index].untilDate != null ? DateFormat('EEEE, dd MMMM yyyy').format(DateTime.parse(controller.borrowHistoryList[index].untilDate!)) : "Unknown"}',
-                                      ),
-                                      const SizedBox(
-                                        height: 10.0,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            'Status: ${controller.borrowHistoryList[index].status ?? "Unknown"}',
-                                          ),
-                                          const SizedBox(
-                                            width: 10.0,
-                                          ),
-                                          Text(
-                                            'Number Of Books Borrowed: ${controller.borrowHistoryList[index].books != null ? controller.borrowHistoryList[index].books!.length : "Unknown"}',
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ) :
-                        const Expanded(
                           child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              Text(
-                                'There is no history to show',
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.w700,
+                              const Padding(
+                                padding: EdgeInsets.all(10.0),
+                                child: Text(
+                                  "BORROW HISTORY",
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
-                                textAlign: TextAlign.center,
-                              )
+                              ),
+                              controller.borrowHistoryList.isNotEmpty ?
+                              Expanded(
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: controller.borrowHistoryList.length < 5 ?
+                                  controller.borrowHistoryList.length : 5,
+                                  itemBuilder: (BuildContext listContext, int index) {
+                                    return Card(
+                                      elevation: 10.0,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(5.0),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                                          children: [
+                                            Text(
+                                              'Borrow Date: ${controller.borrowHistoryList[index].fromDate != null ? DateFormat('EEEE, dd MMMM yyyy').format(DateTime.parse(controller.borrowHistoryList[index].fromDate!)) : "Unknown"}',
+                                            ),
+                                            Text(
+                                              'Return Date: ${controller.borrowHistoryList[index].untilDate != null ? DateFormat('EEEE, dd MMMM yyyy').format(DateTime.parse(controller.borrowHistoryList[index].untilDate!)) : "Unknown"}',
+                                            ),
+                                            const SizedBox(
+                                              height: 10.0,
+                                            ),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text(
+                                                  controller.borrowHistoryList[index].status ?? "-",
+                                                  style: const TextStyle(
+                                                    color: Colors.green,
+                                                    fontWeight: FontWeight.w700,
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  width: 10.0,
+                                                ),
+                                                Text(
+                                                  'Number Of Books Borrowed: ${controller.borrowHistoryList[index].books != null ? controller.borrowHistoryList[index].books!.length : "Unknown"}',
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ) :
+                              const Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  children: [
+                                    Text(
+                                      'There is no history to show',
+                                      style: TextStyle(
+                                        fontSize: 18.0,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    )
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -686,6 +753,16 @@ class ShowcaseViewPage extends StatelessWidget {
                         imageUrl: controller.libraryMemberData.photoUrl ?? '',
                         width: MediaQuery.of(context).size.width / 6,
                         fit: BoxFit.contain,
+                        errorWidget: (errContext, _, errObj) {
+                          return SizedBox(
+                            width: MediaQuery.of(context).size.width / 6,
+                            child: const Icon(
+                              Icons.person,
+                              size: 200.0,
+                              color: Colors.white,
+                            ),
+                          );
+                        },
                       ),
                     ),
                     const SizedBox(
@@ -777,6 +854,16 @@ class ShowcaseViewPage extends StatelessWidget {
                                   child: CachedNetworkImage(
                                     imageUrl: returnedBook.url ?? '',
                                     fit: BoxFit.contain,
+                                    errorWidget: (errContext, _, errObj) {
+                                      return SizedBox(
+                                        width: MediaQuery.of(context).size.width / 24,
+                                        child: Icon(
+                                          Icons.book,
+                                          size: 40.0,
+                                          color: Theme.of(context).colorScheme.primary,
+                                        ),
+                                      );
+                                    },
                                   ),
                                 ),
                                 const SizedBox(
@@ -801,9 +888,6 @@ class ShowcaseViewPage extends StatelessWidget {
                                         style: const TextStyle(
                                           fontSize: 10.0,
                                         ),
-                                      ),
-                                      const SizedBox(
-                                        height: 10.0,
                                       ),
                                       Row(
                                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -915,6 +999,16 @@ class ShowcaseViewPage extends StatelessWidget {
                         imageUrl: controller.libraryMemberData.photoUrl ?? '',
                         width: MediaQuery.of(context).size.width / 6,
                         fit: BoxFit.contain,
+                        errorWidget: (errContext, _, errObj) {
+                          return SizedBox(
+                            width: MediaQuery.of(context).size.width / 6,
+                            child: const Icon(
+                              Icons.person,
+                              size: 200.0,
+                              color: Colors.white,
+                            ),
+                          );
+                        },
                       ),
                     ),
                     const SizedBox(
@@ -1004,6 +1098,16 @@ class ShowcaseViewPage extends StatelessWidget {
                                   child: CachedNetworkImage(
                                     imageUrl: controller.borrowedBookList[index].url ?? '',
                                     fit: BoxFit.contain,
+                                    errorWidget: (errContext, _, errObj) {
+                                      return SizedBox(
+                                        width: MediaQuery.of(context).size.width / 24,
+                                        child: Icon(
+                                          Icons.book,
+                                          size: 40.0,
+                                          color: Theme.of(context).colorScheme.primary,
+                                        ),
+                                      );
+                                    },
                                   ),
                                 ),
                                 const SizedBox(
@@ -1028,9 +1132,6 @@ class ShowcaseViewPage extends StatelessWidget {
                                         style: const TextStyle(
                                           fontSize: 10.0,
                                         ),
-                                      ),
-                                      const SizedBox(
-                                        height: 10.0,
                                       ),
                                       Row(
                                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1124,6 +1225,15 @@ class ShowcaseViewPage extends StatelessWidget {
                         child: CachedNetworkImage(
                           imageUrl: controller.bookData!.mediaPath ?? '',
                           fit: BoxFit.contain,
+                          errorWidget: (errContext, _, errObj) {
+                            return SizedBox(
+                              child: Icon(
+                                Icons.book,
+                                size: 200.0,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ),
