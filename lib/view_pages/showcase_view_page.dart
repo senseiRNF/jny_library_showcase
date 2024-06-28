@@ -221,7 +221,6 @@ class ShowcaseViewPage extends StatelessWidget {
                                       Text(
                                         controller.bookDataList[index].title ?? 'Unknown',
                                         style: const TextStyle(
-                                          fontSize: 14.0,
                                           fontWeight: FontWeight.w700,
                                         ),
                                       ),
@@ -230,24 +229,18 @@ class ShowcaseViewPage extends StatelessWidget {
                                       ),
                                       Text(
                                         "ISBN/ISSN: ${controller.bookDataList[index].isbnOrIssn ?? 'Unknown'}",
-                                        style: const TextStyle(
-                                          fontSize: 10.0,
-                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 10.0,
                                       ),
                                       Row(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           const Text(
                                             'Authors: ',
-                                            style: TextStyle(
-                                              fontSize: 10.0,
-                                            ),
                                           ),
                                           Text(
                                             controller.bookDataList[index].authorNames ?? 'Unknown',
-                                            style: const TextStyle(
-                                              fontSize: 10.0,
-                                            ),
                                           ),
                                         ],
                                       ),
@@ -257,17 +250,11 @@ class ShowcaseViewPage extends StatelessWidget {
                                           Expanded(
                                             child: Text(
                                               'Publisher: ${controller.bookDataList[index].publisher ?? 'Unknown'} ',
-                                              style: const TextStyle(
-                                                fontSize: 10.0,
-                                              ),
                                             ),
                                           ),
                                           Expanded(
                                             child: Text(
                                               'Publishing Year: ${controller.bookDataList[index].publishingYear ?? 'Unknown'}',
-                                              style: const TextStyle(
-                                                fontSize: 10.0,
-                                              ),
                                             ),
                                           ),
                                         ],
@@ -399,7 +386,8 @@ class ShowcaseViewPage extends StatelessWidget {
                     child: ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      itemCount: controller.borrowedDetailList.length,
+                      itemCount: controller.borrowedDetailList.length < 5 ?
+                      controller.borrowedDetailList.length : 5,
                       itemBuilder: (BuildContext listContext, int index) {
                         return Card(
                           elevation: 10.0,
@@ -409,6 +397,7 @@ class ShowcaseViewPage extends StatelessWidget {
                           child: Padding(
                             padding: const EdgeInsets.all(10.0),
                             child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
                                 Text(
@@ -420,23 +409,94 @@ class ShowcaseViewPage extends StatelessWidget {
                                 const SizedBox(
                                   height: 10.0,
                                 ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      controller.borrowedDetailList[index].status ?? "-",
-                                      style: TextStyle(
-                                        color: Theme.of(context).colorScheme.primary,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 10.0,
-                                    ),
-                                    Text(
-                                      'Number Of Books Borrowed: ${controller.borrowedDetailList[index].books != null ? controller.borrowedDetailList[index].books!.length : "Unknown"}',
-                                    ),
-                                  ],
+                                controller.borrowedDetailList[index].books != null ?
+                                ListView.separated(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: controller.borrowedDetailList[index].books!.length,
+                                  separatorBuilder: (separatorContext, separatorIndex) {
+                                    return const SizedBox(
+                                      height: 5.0,
+                                    );
+                                  },
+                                  itemBuilder: (subContext, subIndex) {
+                                    return Row(
+                                      children: [
+                                        CachedNetworkImage(
+                                          imageUrl: controller.borrowedDetailList[index].books![subIndex].url ?? '',
+                                          width: MediaQuery.of(context).size.width / 34,
+                                          fit: BoxFit.contain,
+                                          errorWidget: (errContext, _, errObj) {
+                                            return SizedBox(
+                                              width: MediaQuery.of(context).size.width / 34,
+                                              child: Icon(
+                                                Icons.book,
+                                                size: 40.0,
+                                                color: Theme.of(context).colorScheme.primary,
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                        const SizedBox(
+                                          width: 5.0,
+                                        ),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                                            children: [
+                                              Text(
+                                                controller.borrowedDetailList[index].books![subIndex].bibliography != null
+                                                    ? controller.borrowedDetailList[index].books![subIndex].bibliography!.title ?? " - " : " - ",
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.w700,
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                height: 5.0,
+                                              ),
+                                              Text(
+                                                "ISBN/ISSN: ${controller.borrowedDetailList[index].books![subIndex].bibliography != null
+                                                    ? controller.borrowedDetailList[index].books![subIndex].bibliography!.isbnOrIssn ?? ' - ' : ' - '}",
+                                              ),
+                                              const SizedBox(
+                                                height: 5.0,
+                                              ),
+                                              Text(
+                                                "Authors: ${controller.borrowedDetailList[index].books![subIndex].bibliography != null
+                                                    ? controller.borrowedDetailList[index].books![subIndex].bibliography!.authorNames ?? ' - ' : ' - '}",
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Expanded(
+                                                    child: Text(
+                                                      "Publisher: ${controller.borrowedDetailList[index].books![subIndex].bibliography != null
+                                                          && controller.borrowedDetailList[index].books![subIndex].bibliography!.publisher != null
+                                                          ? controller.borrowedDetailList[index].books![subIndex].bibliography!.publisher!.name ?? ' - ' : ' - '}",
+                                                    ),
+                                                  ),
+                                                  Expanded(
+                                                    child: Text(
+                                                      "Publishing Year: ${controller.borrowedDetailList[index].books![subIndex].bibliography != null
+                                                          ? controller.borrowedDetailList[index].books![subIndex].bibliography!.publishingYear ?? ' - ' : ' - '}",
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                ) :
+                                const Material(),
+                                Text(
+                                  controller.borrowedDetailList[index].status ?? "-",
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.primary,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                  textAlign: TextAlign.end,
                                 ),
                               ],
                             ),
@@ -447,12 +507,12 @@ class ShowcaseViewPage extends StatelessWidget {
                   ) :
                   const Expanded(
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Text(
                           'Currently, no books are being borrowed',
                           style: TextStyle(
-                            fontSize: 24.0,
+                            fontSize: 18.0,
                             fontWeight: FontWeight.w700,
                           ),
                           textAlign: TextAlign.center,
@@ -553,174 +613,377 @@ class ShowcaseViewPage extends StatelessWidget {
                     child: Row(
                       children: [
                         Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              const Padding(
-                                padding: EdgeInsets.all(10.0),
-                                child: Text(
-                                  "BOOKS CURRENTLY BEING BORROWED",
-                                  style: TextStyle(
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.w700,
+                          child: Container(
+                            margin: const EdgeInsets.all(5.0),
+                            padding: const EdgeInsets.all(5.0),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                width: 1.0,
+                              ),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.all(10.0),
+                                  child: Text(
+                                    "CURRENTLY BORROWED",
+                                    style: TextStyle(
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                    textAlign: TextAlign.center,
                                   ),
                                 ),
-                              ),
-                              controller.borrowedDetailList.isNotEmpty ?
-                              Expanded(
-                                child: ListView.builder(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemCount: controller.borrowedDetailList.length < 5 ?
-                                  controller.borrowedDetailList.length : 5,
-                                  itemBuilder: (BuildContext listContext, int index) {
-                                    return Card(
-                                      elevation: 10.0,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(5.0),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(10.0),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                                          children: [
-                                            Text(
-                                              'Borrow Date: ${controller.borrowedDetailList[index].fromDate != null ? DateFormat('EEEE, dd MMMM yyyy').format(DateTime.parse(controller.borrowedDetailList[index].fromDate!)) : "Unknown"}',
-                                            ),
-                                            Text(
-                                              'Return Date: ${controller.borrowedDetailList[index].untilDate != null ? DateFormat('EEEE, dd MMMM yyyy').format(DateTime.parse(controller.borrowedDetailList[index].untilDate!)) : "Unknown"}',
-                                            ),
-                                            const SizedBox(
-                                              height: 10.0,
-                                            ),
-                                            Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                Text(
-                                                  controller.borrowedDetailList[index].status ?? "-",
-                                                  style: TextStyle(
-                                                    color: Theme.of(context).colorScheme.primary,
-                                                    fontWeight: FontWeight.w700,
-                                                  ),
-                                                ),
-                                                const SizedBox(
-                                                  width: 10.0,
-                                                ),
-                                                Text(
-                                                  'Number Of Books Borrowed: ${controller.borrowedDetailList[index].books != null ? controller.borrowedDetailList[index].books!.length : "Unknown"}',
-                                                ),
-                                              ],
-                                            ),
-                                          ],
+                                controller.borrowedDetailList.isNotEmpty ?
+                                Expanded(
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    itemCount: controller.borrowedDetailList.length < 5 ?
+                                    controller.borrowedDetailList.length : 5,
+                                    itemBuilder: (BuildContext listContext, int index) {
+                                      return Card(
+                                        elevation: 10.0,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(5.0),
                                         ),
-                                      ),
-                                    );
-                                  },
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                                            children: [
+                                              Text(
+                                                'Borrow Date: ${controller.borrowedDetailList[index].fromDate != null ? DateFormat('EEEE, dd MMMM yyyy').format(DateTime.parse(controller.borrowedDetailList[index].fromDate!)) : "Unknown"}',
+                                                style: const TextStyle(
+                                                  fontSize: 12.0,
+                                                ),
+                                              ),
+                                              Text(
+                                                'Return Date: ${controller.borrowedDetailList[index].untilDate != null ? DateFormat('EEEE, dd MMMM yyyy').format(DateTime.parse(controller.borrowedDetailList[index].untilDate!)) : "Unknown"}',
+                                                style: const TextStyle(
+                                                  fontSize: 12.0,
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                height: 10.0,
+                                              ),
+                                              controller.borrowedDetailList[index].books != null ?
+                                              ListView.separated(
+                                                shrinkWrap: true,
+                                                physics: const NeverScrollableScrollPhysics(),
+                                                itemCount: controller.borrowedDetailList[index].books!.length,
+                                                separatorBuilder: (separatorContext, separatorIndex) {
+                                                  return const SizedBox(
+                                                    height: 5.0,
+                                                  );
+                                                },
+                                                itemBuilder: (subContext, subIndex) {
+                                                  return Row(
+                                                    children: [
+                                                      CachedNetworkImage(
+                                                        imageUrl: controller.borrowedDetailList[index].books![subIndex].url ?? '',
+                                                        width: MediaQuery.of(context).size.width / 34,
+                                                        fit: BoxFit.contain,
+                                                        errorWidget: (errContext, _, errObj) {
+                                                          return SizedBox(
+                                                            width: MediaQuery.of(context).size.width / 34,
+                                                            child: Icon(
+                                                              Icons.book,
+                                                              size: 40.0,
+                                                              color: Theme.of(context).colorScheme.primary,
+                                                            ),
+                                                          );
+                                                        },
+                                                      ),
+                                                      const SizedBox(
+                                                        width: 5.0,
+                                                      ),
+                                                      Expanded(
+                                                        child: Column(
+                                                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                          children: [
+                                                            Text(
+                                                              controller.borrowedDetailList[index].books![subIndex].bibliography != null
+                                                                  ? controller.borrowedDetailList[index].books![subIndex].bibliography!.title ?? " - " : " - ",
+                                                              style: const TextStyle(
+                                                                fontSize: 12.0,
+                                                                fontWeight: FontWeight.w700,
+                                                              ),
+                                                            ),
+                                                            const SizedBox(
+                                                              height: 5.0,
+                                                            ),
+                                                            Text(
+                                                              "ISBN/ISSN: ${controller.borrowedDetailList[index].books![subIndex].bibliography != null
+                                                                  ? controller.borrowedDetailList[index].books![subIndex].bibliography!.isbnOrIssn ?? ' - ' : ' - '}",
+                                                              style: const TextStyle(
+                                                                fontSize: 12.0,
+                                                              ),
+                                                            ),
+                                                            const SizedBox(
+                                                              height: 5.0,
+                                                            ),
+                                                            Text(
+                                                              "Authors: ${controller.borrowedDetailList[index].books![subIndex].bibliography != null
+                                                                  ? controller.borrowedDetailList[index].books![subIndex].bibliography!.authorNames ?? ' - ' : ' - '}",
+                                                              style: const TextStyle(
+                                                                fontSize: 12.0,
+                                                              ),
+                                                            ),
+                                                            Row(
+                                                              children: [
+                                                                Expanded(
+                                                                  child: Text(
+                                                                    "Publisher: ${controller.borrowedDetailList[index].books![subIndex].bibliography != null
+                                                                        && controller.borrowedDetailList[index].books![subIndex].bibliography!.publisher != null
+                                                                        ? controller.borrowedDetailList[index].books![subIndex].bibliography!.publisher!.name ?? ' - ' : ' - '}",
+                                                                    style: const TextStyle(
+                                                                      fontSize: 12.0,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Expanded(
+                                                                  child: Text(
+                                                                    "Publishing Year: ${controller.borrowedDetailList[index].books![subIndex].bibliography != null
+                                                                        ? controller.borrowedDetailList[index].books![subIndex].bibliography!.publishingYear ?? ' - ' : ' - '}",
+                                                                    style: const TextStyle(
+                                                                      fontSize: 12.0,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              ) :
+                                              const Material(),
+                                              Text(
+                                                controller.borrowedDetailList[index].status ?? "-",
+                                                style: TextStyle(
+                                                  color: Theme.of(context).colorScheme.primary,
+                                                  fontWeight: FontWeight.w700,
+                                                ),
+                                                textAlign: TextAlign.end,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ) :
+                                const Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                                    children: [
+                                      Text(
+                                        'Currently, no books are being borrowed',
+                                        style: TextStyle(
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      )
+                                    ],
+                                  ),
                                 ),
-                              ) :
-                              const Expanded(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                                  children: [
-                                    Text(
-                                      'Currently, no books are being borrowed',
-                                      style: TextStyle(
-                                        fontSize: 18.0,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                         Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              const Padding(
-                                padding: EdgeInsets.all(10.0),
-                                child: Text(
-                                  "BORROW HISTORY",
-                                  style: TextStyle(
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.w700,
+                          child: Container(
+                            margin: const EdgeInsets.all(5.0),
+                            padding: const EdgeInsets.all(5.0),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                width: 1.0,
+                              ),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.all(10.0),
+                                  child: Text(
+                                    "BORROW HISTORY",
+                                    style: TextStyle(
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                    textAlign: TextAlign.center,
                                   ),
                                 ),
-                              ),
-                              controller.borrowHistoryList.isNotEmpty ?
-                              Expanded(
-                                child: ListView.builder(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemCount: controller.borrowHistoryList.length < 5 ?
-                                  controller.borrowHistoryList.length : 5,
-                                  itemBuilder: (BuildContext listContext, int index) {
-                                    return Card(
-                                      elevation: 10.0,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(5.0),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(10.0),
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                                          children: [
-                                            Text(
-                                              'Borrow Date: ${controller.borrowHistoryList[index].fromDate != null ? DateFormat('EEEE, dd MMMM yyyy').format(DateTime.parse(controller.borrowHistoryList[index].fromDate!)) : "Unknown"}',
-                                            ),
-                                            Text(
-                                              'Return Date: ${controller.borrowHistoryList[index].untilDate != null ? DateFormat('EEEE, dd MMMM yyyy').format(DateTime.parse(controller.borrowHistoryList[index].untilDate!)) : "Unknown"}',
-                                            ),
-                                            const SizedBox(
-                                              height: 10.0,
-                                            ),
-                                            Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                Text(
-                                                  controller.borrowHistoryList[index].status ?? "-",
-                                                  style: const TextStyle(
-                                                    color: Colors.green,
-                                                    fontWeight: FontWeight.w700,
-                                                  ),
-                                                ),
-                                                const SizedBox(
-                                                  width: 10.0,
-                                                ),
-                                                Text(
-                                                  'Number Of Books Borrowed: ${controller.borrowHistoryList[index].books != null ? controller.borrowHistoryList[index].books!.length : "Unknown"}',
-                                                ),
-                                              ],
-                                            ),
-                                          ],
+                                controller.borrowHistoryList.isNotEmpty ?
+                                Expanded(
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    itemCount: controller.borrowHistoryList.length < 5 ?
+                                    controller.borrowHistoryList.length : 5,
+                                    itemBuilder: (BuildContext listContext, int index) {
+                                      return Card(
+                                        elevation: 10.0,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(5.0),
                                         ),
-                                      ),
-                                    );
-                                  },
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                                            children: [
+                                              Text(
+                                                'Borrow Date: ${controller.borrowHistoryList[index].fromDate != null ? DateFormat('EEEE, dd MMMM yyyy').format(DateTime.parse(controller.borrowHistoryList[index].fromDate!)) : "Unknown"}',
+                                                style: const TextStyle(
+                                                  fontSize: 12.0,
+                                                ),
+                                              ),
+                                              Text(
+                                                'Return Date: ${controller.borrowHistoryList[index].untilDate != null ? DateFormat('EEEE, dd MMMM yyyy').format(DateTime.parse(controller.borrowHistoryList[index].untilDate!)) : "Unknown"}',
+                                                style: const TextStyle(
+                                                  fontSize: 12.0,
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                height: 10.0,
+                                              ),
+                                              controller.borrowHistoryList[index].books != null ?
+                                              ListView.separated(
+                                                shrinkWrap: true,
+                                                physics: const NeverScrollableScrollPhysics(),
+                                                itemCount: controller.borrowHistoryList[index].books!.length,
+                                                separatorBuilder: (separatorContext, separatorIndex) {
+                                                  return const SizedBox(
+                                                    height: 5.0,
+                                                  );
+                                                },
+                                                itemBuilder: (subContext, subIndex) {
+                                                  return Row(
+                                                    children: [
+                                                      CachedNetworkImage(
+                                                        imageUrl: controller.borrowHistoryList[index].books![subIndex].url ?? '',
+                                                        width: MediaQuery.of(context).size.width / 34,
+                                                        fit: BoxFit.contain,
+                                                        errorWidget: (errContext, _, errObj) {
+                                                          return SizedBox(
+                                                            width: MediaQuery.of(context).size.width / 34,
+                                                            child: Icon(
+                                                              Icons.book,
+                                                              size: 40.0,
+                                                              color: Theme.of(context).colorScheme.primary,
+                                                            ),
+                                                          );
+                                                        },
+                                                      ),
+                                                      const SizedBox(
+                                                        width: 5.0,
+                                                      ),
+                                                      Expanded(
+                                                        child: Column(
+                                                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                          children: [
+                                                            Text(
+                                                              controller.borrowHistoryList[index].books![subIndex].bibliography != null
+                                                                  ? controller.borrowHistoryList[index].books![subIndex].bibliography!.title ?? " - " : " - ",
+                                                              style: const TextStyle(
+                                                                fontSize: 12.0,
+                                                                fontWeight: FontWeight.w700,
+                                                              ),
+                                                            ),
+                                                            const SizedBox(
+                                                              height: 5.0,
+                                                            ),
+                                                            Text(
+                                                              "ISBN/ISSN: ${controller.borrowHistoryList[index].books![subIndex].bibliography != null
+                                                                  ? controller.borrowHistoryList[index].books![subIndex].bibliography!.isbnOrIssn ?? ' - ' : ' - '}",
+                                                              style: const TextStyle(
+                                                                fontSize: 12.0,
+                                                              ),
+                                                            ),
+                                                            const SizedBox(
+                                                              height: 5.0,
+                                                            ),
+                                                            Text(
+                                                              "Authors: ${controller.borrowHistoryList[index].books![subIndex].bibliography != null
+                                                                  ? controller.borrowHistoryList[index].books![subIndex].bibliography!.authorNames ?? ' - ' : ' - '}",
+                                                              style: const TextStyle(
+                                                                fontSize: 12.0,
+                                                              ),
+                                                            ),
+                                                            Row(
+                                                              children: [
+                                                                Expanded(
+                                                                  child: Text(
+                                                                    "Publisher: ${controller.borrowHistoryList[index].books![subIndex].bibliography != null
+                                                                        && controller.borrowHistoryList[index].books![subIndex].bibliography!.publisher != null
+                                                                        ? controller.borrowHistoryList[index].books![subIndex].bibliography!.publisher!.name ?? ' - ' : ' - '}",
+                                                                    style: const TextStyle(
+                                                                      fontSize: 12.0,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Expanded(
+                                                                  child: Text(
+                                                                    "Publishing Year: ${controller.borrowHistoryList[index].books![subIndex].bibliography != null
+                                                                        ? controller.borrowHistoryList[index].books![subIndex].bibliography!.publishingYear ?? ' - ' : ' - '}",
+                                                                    style: const TextStyle(
+                                                                      fontSize: 12.0,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              ) :
+                                              const Material(),
+                                              Text(
+                                                controller.borrowHistoryList[index].status ?? "-",
+                                                style: const TextStyle(
+                                                  color: Colors.green,
+                                                  fontWeight: FontWeight.w700,
+                                                ),
+                                                textAlign: TextAlign.end,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ) :
+                                const Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                                    children: [
+                                      Text(
+                                        'There is no history to show',
+                                        style: TextStyle(
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      )
+                                    ],
+                                  ),
                                 ),
-                              ) :
-                              const Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                                  children: [
-                                    Text(
-                                      'There is no history to show',
-                                      style: TextStyle(
-                                        fontSize: 18.0,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ],
@@ -885,26 +1148,18 @@ class ShowcaseViewPage extends StatelessWidget {
                                       ),
                                       Text(
                                         "ISBN/ISSN: ${returnedBook.bibliography!.isbnOrIssn ?? 'Unknown'}",
-                                        style: const TextStyle(
-                                          fontSize: 10.0,
-                                        ),
                                       ),
                                       Row(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           const Text(
                                             'Authors: ',
-                                            style: TextStyle(
-                                              fontSize: 10.0,
-                                            ),
                                           ),
                                           Text(
-                                            returnedBook.bibliography != null ?
-                                            returnedBook.bibliography!.authorNames ?? 'Unknown' :
-                                            'Unknown',
-                                            style: const TextStyle(
-                                              fontSize: 10.0,
-                                            ),
+                                            returnedBook.bibliography != null
+                                                ? returnedBook.bibliography!.authorNames
+                                                ?? 'Unknown'
+                                                : 'Unknown',
                                           ),
                                         ],
                                       ),
@@ -913,23 +1168,23 @@ class ShowcaseViewPage extends StatelessWidget {
                                         children: [
                                           Expanded(
                                             child: Text(
-                                              'Publisher: ${returnedBook.bibliography != null
-                                                  && returnedBook.bibliography!.publisher != null ?
-                                              returnedBook.bibliography!.publisher!.name ?? 'Unknown' :
-                                              "Unknown"} ',
-                                              style: const TextStyle(
-                                                fontSize: 10.0,
-                                              ),
+                                              'Publisher: ${
+                                                  returnedBook.bibliography != null
+                                                      && returnedBook.bibliography!.publisher != null
+                                                      ? returnedBook.bibliography!.publisher!.name
+                                                      ?? 'Unknown'
+                                                      : "Unknown"
+                                              } ',
                                             ),
                                           ),
                                           Expanded(
                                             child: Text(
-                                              'Publishing Year: ${returnedBook.bibliography != null ?
-                                              returnedBook.bibliography!.publishingYear ?? 'Unknown' :
-                                              "Unknown"} ',
-                                              style: const TextStyle(
-                                                fontSize: 10.0,
-                                              ),
+                                              'Publishing Year: ${
+                                                  returnedBook.bibliography != null
+                                                      ? returnedBook.bibliography!.publishingYear
+                                                      ?? 'Unknown'
+                                                      : "Unknown"
+                                              } ',
                                             ),
                                           ),
                                         ],
@@ -1532,49 +1787,76 @@ class ShowcaseViewPage extends StatelessWidget {
           fit: BoxFit.cover,
         ) :
         controller.currentState == "INFORMATION" ?
-        Image.asset(
-          "assets/images/information.png",
-          fit: BoxFit.cover,
+        Container(
+          color: Colors.black,
+          child: Image.asset(
+            "assets/images/information.png",
+            fit: BoxFit.contain,
+          ),
         ) :
         controller.currentState == "INFO_1" ?
-        Image.asset(
-          "assets/images/library_info_1.jpeg",
-          fit: BoxFit.cover,
+        Container(
+          color: Colors.black,
+          child: Image.asset(
+            "assets/images/library_info_1.jpeg",
+            fit: BoxFit.contain,
+          ),
         ) :
         controller.currentState == "INFO_2" ?
-        Image.asset(
-          "assets/images/library_info_2.png",
-          fit: BoxFit.cover,
+        Container(
+          color: Colors.black,
+          child: Image.asset(
+            "assets/images/library_info_2.png",
+            fit: BoxFit.cover,
+          ),
         ) :
         controller.currentState == "INFO_3" ?
-        Image.asset(
-          "assets/images/library_info_3.png",
-          fit: BoxFit.cover,
+        Container(
+          color: Colors.black,
+          child: Image.asset(
+            "assets/images/library_info_3.png",
+            fit: BoxFit.cover,
+          ),
         ) :
         controller.currentState == "INFO_4" ?
-        Image.asset(
-          "assets/images/library_info_4.png",
-          fit: BoxFit.cover,
+        Container(
+          color: Colors.black,
+          child: Image.asset(
+            "assets/images/library_info_4.png",
+            fit: BoxFit.cover,
+          ),
         ) :
         controller.currentState == "INFO_5" ?
-        Image.asset(
-          "assets/images/library_info_5.png",
-          fit: BoxFit.cover,
+        Container(
+          color: Colors.black,
+          child: Image.asset(
+            "assets/images/library_info_5.png",
+            fit: BoxFit.cover,
+          ),
         ) :
         controller.currentState == "INFO_6" ?
-        Image.asset(
-          "assets/images/library_info_6.png",
-          fit: BoxFit.cover,
+        Container(
+          color: Colors.black,
+          child: Image.asset(
+            "assets/images/library_info_6.png",
+            fit: BoxFit.cover,
+          ),
         ) :
         controller.currentState == "INFO_7" ?
-        Image.asset(
-          "assets/images/library_info_7.png",
-          fit: BoxFit.cover,
+        Container(
+          color: Colors.black,
+          child: Image.asset(
+            "assets/images/library_info_7.png",
+            fit: BoxFit.cover,
+          ),
         ) :
         controller.currentState == "INFO_8" ?
-        Image.asset(
-          "assets/images/library_info_8.png",
-          fit: BoxFit.cover,
+        Container(
+          color: Colors.black,
+          child: Image.asset(
+            "assets/images/library_info_8.png",
+            fit: BoxFit.cover,
+          ),
         ) :
         const Material() :
         const Material(),
