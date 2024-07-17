@@ -27,7 +27,7 @@ class HomeViewPage extends StatelessWidget {
                   onClick: () => controller.onClickedMenu(0),
                   onFocus: (focus) => controller.onFocusChanged(focus, 0),
                   child: InkWell(
-                    onTap: () => controller.onClickedMenu(0),
+                    // onTap: () => controller.onClickedMenu(0),
                     child: Card(
                       elevation: 5.0,
                       color: controller.selectedIndex == 0 ?
@@ -53,7 +53,7 @@ class HomeViewPage extends StatelessWidget {
                   onClick: () => controller.onClickedMenu(1),
                   onFocus: (focus) => controller.onFocusChanged(focus, 1),
                   child: InkWell(
-                    onTap: () => controller.onClickedMenu(1),
+                    // onTap: () => controller.onClickedMenu(1),
                     child: Card(
                       elevation: 5.0,
                       color: controller.selectedIndex == 1 ?

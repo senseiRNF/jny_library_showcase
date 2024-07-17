@@ -1858,6 +1858,14 @@ class ShowcaseViewPage extends StatelessWidget {
             fit: BoxFit.cover,
           ),
         ) :
+        controller.currentState == "INFO_9" ?
+        Container(
+          color: Colors.black,
+          child: Image.asset(
+            "assets/images/library_info_9.png",
+            fit: BoxFit.cover,
+          ),
+        ) :
         const Material() :
         const Material(),
       ),
