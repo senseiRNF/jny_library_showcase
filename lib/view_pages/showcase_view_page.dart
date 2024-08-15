@@ -109,20 +109,24 @@ class ShowcaseViewPage extends StatelessWidget {
                           const SizedBox(
                             height: 20.0,
                           ),
+                          controller.libraryMemberData.nis != null ?
                           Text(
-                            controller.libraryMemberData.nis ?? controller.libraryMemberData.nik ?? '',
+                            controller.libraryMemberData.nis!,
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 16.0,
                             ),
-                          ),
+                          ) :
+                          const Material(),
+                          controller.libraryMemberData.className != null ?
                           Text(
-                            controller.libraryMemberData.className ?? controller.libraryMemberData.email ?? '',
+                            controller.libraryMemberData.className!,
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 16.0,
                             ),
-                          ),
+                          ) :
+                          const Material(),
                         ],
                       ),
                     ),
@@ -348,20 +352,24 @@ class ShowcaseViewPage extends StatelessWidget {
                     const SizedBox(
                       height: 20.0,
                     ),
+                    controller.libraryMemberData.nis != null ?
                     Text(
-                      controller.libraryMemberData.nis ?? controller.libraryMemberData.nik ?? '',
+                      controller.libraryMemberData.nis!,
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16.0,
                       ),
-                    ),
+                    ) :
+                    const Material(),
+                    controller.libraryMemberData.className != null ?
                     Text(
-                      controller.libraryMemberData.className ?? controller.libraryMemberData.email ?? '',
+                      controller.libraryMemberData.className!,
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16.0,
                       ),
-                    ),
+                    ) :
+                    const Material(),
                   ],
                 ),
               ),
@@ -574,20 +582,23 @@ class ShowcaseViewPage extends StatelessWidget {
                     const SizedBox(
                       height: 20.0,
                     ),
+                    controller.libraryMemberData.nis != null ?
                     Text(
-                      controller.libraryMemberData.nis ?? controller.libraryMemberData.nik ?? '',
+                      controller.libraryMemberData.nis!,
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16.0,
                       ),
-                    ),
-                    Text(
-                      controller.libraryMemberData.className ?? controller.libraryMemberData.email ?? '',
+                    ) :
+                    const Material(),
+                    controller.libraryMemberData.className != null ? Text(
+                      controller.libraryMemberData.className!,
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16.0,
                       ),
-                    ),
+                    ) :
+                    const Material(),
                   ],
                 ),
               ),
@@ -955,7 +966,7 @@ class ShowcaseViewPage extends StatelessWidget {
                                               Text(
                                                 controller.borrowHistoryList[index].status ?? "-",
                                                 style: const TextStyle(
-                                                  color: Colors.green,
+                                                  color: Colors.lightGreen,
                                                   fontWeight: FontWeight.w700,
                                                 ),
                                                 textAlign: TextAlign.end,
@@ -1043,20 +1054,24 @@ class ShowcaseViewPage extends StatelessWidget {
                     const SizedBox(
                       height: 20.0,
                     ),
+                    controller.libraryMemberData.nis != null ?
                     Text(
-                      controller.libraryMemberData.nis ?? controller.libraryMemberData.nik ?? '',
+                      controller.libraryMemberData.nis!,
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16.0,
                       ),
-                    ),
+                    ) :
+                    const Material(),
+                    controller.libraryMemberData.className != null ?
                     Text(
-                      controller.libraryMemberData.className ?? controller.libraryMemberData.email ?? '',
+                      controller.libraryMemberData.className!,
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16.0,
                       ),
-                    ),
+                    ) :
+                    const Material(),
                   ],
                 ),
               ),
@@ -1088,6 +1103,9 @@ class ShowcaseViewPage extends StatelessWidget {
                         return returnedBook.bibliography != null ?
                         Card(
                           elevation: 10.0,
+                          color: controller.returnedBookList[index].keys.first == true
+                              ? Colors.lightGreen
+                              : Colors.white,
                           child: Padding(
                             padding: const EdgeInsets.all(10.0),
                             child: Row(
@@ -1097,14 +1115,18 @@ class ShowcaseViewPage extends StatelessWidget {
                                   width: 30.0,
                                   height: 30.0,
                                   decoration: BoxDecoration(
-                                    color: Theme.of(context).colorScheme.primary,
+                                    color: controller.returnedBookList[index].keys.first == true
+                                        ? Colors.white
+                                        : Theme.of(context).colorScheme.primary,
                                     shape: BoxShape.circle,
                                   ),
                                   child: Center(
                                     child: Text(
                                       "${index + 1}",
-                                      style: const TextStyle(
-                                        color: Colors.white,
+                                      style: TextStyle(
+                                        color: controller.returnedBookList[index].keys.first == true
+                                            ? Theme.of(context).colorScheme.primary
+                                            : Colors.white,
                                       ),
                                     ),
                                   ),
@@ -1123,7 +1145,9 @@ class ShowcaseViewPage extends StatelessWidget {
                                         child: Icon(
                                           Icons.book,
                                           size: 40.0,
-                                          color: Theme.of(context).colorScheme.primary,
+                                          color: controller.returnedBookList[index].keys.first == true
+                                              ? Colors.white
+                                              : Theme.of(context).colorScheme.primary,
                                         ),
                                       );
                                     },
@@ -1138,7 +1162,10 @@ class ShowcaseViewPage extends StatelessWidget {
                                     children: [
                                       Text(
                                         returnedBook.bibliography!.title ?? 'Unknown',
-                                        style: const TextStyle(
+                                        style: TextStyle(
+                                          color: controller.returnedBookList[index].keys.first == true
+                                              ? Colors.white
+                                              : Colors.black,
                                           fontSize: 14.0,
                                           fontWeight: FontWeight.w700,
                                         ),
@@ -1148,18 +1175,33 @@ class ShowcaseViewPage extends StatelessWidget {
                                       ),
                                       Text(
                                         "ISBN/ISSN: ${returnedBook.bibliography!.isbnOrIssn ?? 'Unknown'}",
+                                        style: TextStyle(
+                                          color: controller.returnedBookList[index].keys.first == true
+                                              ? Colors.white
+                                              : Colors.black,
+                                        ),
                                       ),
                                       Row(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          const Text(
+                                          Text(
                                             'Authors: ',
+                                            style: TextStyle(
+                                              color: controller.returnedBookList[index].keys.first == true
+                                                  ? Colors.white
+                                                  : Colors.black,
+                                            ),
                                           ),
                                           Text(
                                             returnedBook.bibliography != null
                                                 ? returnedBook.bibliography!.authorNames
                                                 ?? 'Unknown'
                                                 : 'Unknown',
+                                            style: TextStyle(
+                                              color: controller.returnedBookList[index].keys.first == true
+                                                  ? Colors.white
+                                                  : Colors.black,
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -1175,6 +1217,11 @@ class ShowcaseViewPage extends StatelessWidget {
                                                       ?? 'Unknown'
                                                       : "Unknown"
                                               } ',
+                                              style: TextStyle(
+                                                color: controller.returnedBookList[index].keys.first == true
+                                                    ? Colors.white
+                                                    : Colors.black,
+                                              ),
                                             ),
                                           ),
                                           Expanded(
@@ -1185,6 +1232,11 @@ class ShowcaseViewPage extends StatelessWidget {
                                                       ?? 'Unknown'
                                                       : "Unknown"
                                               } ',
+                                              style: TextStyle(
+                                                color: controller.returnedBookList[index].keys.first == true
+                                                    ? Colors.white
+                                                    : Colors.black,
+                                              ),
                                             ),
                                           ),
                                         ],
@@ -1198,7 +1250,7 @@ class ShowcaseViewPage extends StatelessWidget {
                                 controller.returnedBookList[index].keys.first == true ?
                                 const Icon(
                                   Icons.check_circle,
-                                  color: Colors.green,
+                                  color: Colors.white,
                                 ) :
                                 const Icon(
                                   Icons.close,
@@ -1281,20 +1333,24 @@ class ShowcaseViewPage extends StatelessWidget {
                     const SizedBox(
                       height: 20.0,
                     ),
+                    controller.libraryMemberData.nis != null ?
                     Text(
-                      controller.libraryMemberData.nis ?? controller.libraryMemberData.nik ?? '',
+                      controller.libraryMemberData.nis!,
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16.0,
                       ),
-                    ),
+                    ) :
+                    const Material(),
+                    controller.libraryMemberData.className != null ?
                     Text(
-                      controller.libraryMemberData.className ?? controller.libraryMemberData.email ?? '',
+                      controller.libraryMemberData.className!,
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16.0,
                       ),
-                    ),
+                    ) :
+                    const Material(),
                   ],
                 ),
               ),
